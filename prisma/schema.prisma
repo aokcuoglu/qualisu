@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Group {
+  id        String    @id @default(uuid())
+  name      String
+  models    Model[]
+  controls  Control[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Model {
+  id        String    @id @default(uuid())
+  name      String
+  image     String
+  status    String
+  vehicles  Vehicle[]
+  group     Group     @relation(fields: [groupId], references: [id])
+  groupId   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Vehicle {
+  id        String   @id @default(uuid())
+  name      String
+  shortCode String   @unique
+  shortVin  String
+  status    String
+  model     Model    @relation(fields: [modelId], references: [id])
+  modelId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Control {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  status    String
+  groups    Group[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PartTeam {
+  id        String      @id @default(uuid())
+  code      String      @unique
+  name      String      @unique
+  slug      String      @unique
+  status    String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  partGroup PartGroup[]
+}
+
+model PartGroup {
+  id           String    @id @default(uuid())
+  code         String    @unique
+  name         String
+  status       String
+  failures     Failure[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  partTeam     PartTeam  @relation(fields: [partTeamSlug], references: [slug])
+  partTeamSlug String
+}
+
+model Failure {
+  id          String    @id @default(uuid())
+  code        String    @unique
+  name        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  partGroup   PartGroup @relation(fields: [partGroupId], references: [id])
+  partGroupId String
+}
+
+model Customer {
+  id     String @id @default(uuid())
+  name   String
+  region String
+}

@@ -281,11 +281,7 @@ export const ControlForm: React.FC<FailureSourceFormProps> = ({
             />
           </div>
           <div className="justify-between space-x-2">
-            <Button
-              disabled={loading}
-              variant="ghost"
-              onClick={() => router.back()}
-            >
+            <Button disabled={loading} variant="ghost" onClick={() => router.back()}>
               {cancel}
             </Button>
             <Button disabled={loading} className="ml-auto" type="submit">

@@ -7,7 +7,7 @@ import { PartTeamColumn } from './components/columns'
 const PartTeamsPage = async () => {
   const partTeams = await prismadb.partTeam.findMany({
     orderBy: {
-      code: 'asc'
+      code: 'desc'
     }
   })
 

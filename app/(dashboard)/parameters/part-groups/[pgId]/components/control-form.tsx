@@ -269,7 +269,7 @@ export const ControlForm: React.FC<FailureSourceFormProps> = ({
                     </FormControl>
                     <SelectContent>
                       {status.map((item) => (
-                        <SelectItem key={item.id} value={item.value}>
+                        <SelectItem key={item.value} value={item.value}>
                           {item.label}
                         </SelectItem>
                       ))}
@@ -281,7 +281,12 @@ export const ControlForm: React.FC<FailureSourceFormProps> = ({
             />
           </div>
           <div className="justify-between space-x-2">
-            <Button disabled={loading} variant="ghost" onClick={() => router.back()}>
+            <Button
+              type="reset"
+              disabled={loading}
+              variant="ghost"
+              onClick={() => router.back()}
+            >
               {cancel}
             </Button>
             <Button disabled={loading} className="ml-auto" type="submit">

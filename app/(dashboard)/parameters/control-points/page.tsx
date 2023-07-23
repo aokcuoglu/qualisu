@@ -6,7 +6,7 @@ import { ControlClient } from './components/client'
 import { ControlColumn } from './components/columns'
 
 const ControlPage = async () => {
-  const controls = await prismadb.control.findMany({
+  const controls = await prismadb.controlPoints.findMany({
     orderBy: {
       updatedAt: 'desc'
     },

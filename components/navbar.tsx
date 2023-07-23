@@ -1,15 +1,8 @@
-import { auth, UserButton } from '@clerk/nextjs'
-import { redirect } from 'next/navigation'
+import { UserButton } from '@clerk/nextjs'
 import { MainNav } from '@/components/main-nav'
 import { ThemeToggle } from '@/components/theme-toggle'
 
 export async function Navbar() {
-  const { userId } = auth()
-
-  if (!userId) {
-    redirect('/sign-in')
-  }
-
   return (
     <div
       className="supports-backdrop-blur:bg-background/60

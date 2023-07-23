@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs'
 
 import prismadb from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 
 export async function GET(
   req: Request,
@@ -9,10 +10,10 @@ export async function GET(
 ) {
   try {
     if (!params.controlId) {
-      return new NextResponse('Control Id is required', { status: 400 })
+      return new NextResponse('Control id is required', { status: 400 })
     }
 
-    const control = await prismadb.controls.findUnique({
+    const control = await prismadb.controlPoints.findUnique({
       where: {
         id: params.controlId
       }
@@ -37,10 +38,10 @@ export async function DELETE(
     }
 
     if (!params.controlId) {
-      return new NextResponse('controlId is required', { status: 400 })
+      return new NextResponse('Control id is required', { status: 400 })
     }
 
-    const control = await prismadb.controls.delete({
+    const control = await prismadb.controlPoints.delete({
       where: {
         id: params.controlId
       }
@@ -60,24 +61,27 @@ export async function PATCH(
   try {
     const { userId } = auth()
     const body = await req.json()
-    const { vin, controlPointsId, vehicleId, status } = body
+
+    const { name, status, groups } = body
 
     if (!userId) {
       return new NextResponse('Unauthenticated', { status: 403 })
     }
 
-    const control = await prismadb.controls.update({
+    const control = await prisma.controlPoints.update({
       where: {
         id: params.controlId
       },
       data: {
-        vin,
-        controlPointsId,
-        cUserId: userId,
-        vehicleId,
-        status
+        name,
+        status,
+        groups: {
+          set: [],
+          connect: groups.map((group: string) => ({ id: group }))
+        }
       }
     })
+
     return NextResponse.json(control, { status: 200 })
   } catch (error) {
     console.log('[CONTROL_PATCH]', error)

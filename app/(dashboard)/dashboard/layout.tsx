@@ -1,7 +1,10 @@
-import { Separator } from '@/components/ui/separator'
-import { CalendarDateRangePicker } from '@/app/(dashboard)/dashboard/components/data-range-picker'
+import * as React from 'react'
+
 import { Button } from '@/components/ui/button'
-import { Download } from 'lucide-react'
+import { CalendarDateRangePicker } from '@/components/data-range-picker'
+import { Separator } from '@/components/ui/separator'
+import { SidebarNav } from '@/components/sidebar-nav'
+import { LineChart } from 'lucide-react'
 
 interface DashboardProps {
   children: React.ReactNode
@@ -9,15 +12,18 @@ interface DashboardProps {
 
 export default function Dashboard({ children }: DashboardProps) {
   return (
-    <div className="flex-1 space-y-4 p-8 pt-6">
+    <div className="hidden h-full flex-1 flex-colspace-y-8 p-8 md:block">
       <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+        <div className="space-y-0.5">
+          <div className="flex items-center space-x-1">
+            <LineChart />
+            <h2 className="text-2xl font-bold">Dashboard</h2>
+          </div>
+          <p className="text-muted-foreground">Follow everything</p>
+        </div>
         <div className="flex items-center space-x-2">
           <CalendarDateRangePicker />
-          <Button>
-            <Download className="mr-2 h-4 w-4" />
-            Download
-          </Button>
+          <Button>Download</Button>
         </div>
       </div>
       <Separator className="my-6" />

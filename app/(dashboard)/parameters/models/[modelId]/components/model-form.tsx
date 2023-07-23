@@ -39,7 +39,7 @@ import { status } from '@/lib/data'
 const formSchema = z.object({
   name: z.string().min(1),
   status: z.string().min(1),
-  image: z.string().min(1),
+  // image: z.string().min(1),
   groupId: z.string().min(1)
 })
 
@@ -65,13 +65,12 @@ export const ModelForm: React.FC<ModelFormProps> = ({
   const toastMessage = initialData ? 'Model updated.' : 'Model created.'
   const action = initialData ? 'Save changes' : 'Create'
 
-
   const form = useForm<ModelFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       name: '',
       status: '',
-      image: '',
+      // image: '',
       groupId: ''
     }
   })
@@ -136,24 +135,24 @@ export const ModelForm: React.FC<ModelFormProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Model Image</FormLabel>
-                <FormControl>
-                  <ImageUpload
-                    value={field.value ? [field.value] : []}
-                    disabled={loading}
-                    onChange={(url) => field.onChange(url)}
-                    onRemove={() => field.onChange('')}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/*<FormField*/}
+          {/*  control={form.control}*/}
+          {/*  name="image"*/}
+          {/*  render={({ field }) => (*/}
+          {/*    <FormItem>*/}
+          {/*      <FormLabel>Model Image</FormLabel>*/}
+          {/*      <FormControl>*/}
+          {/*        <ImageUpload*/}
+          {/*          value={field.value ? [field.value] : []}*/}
+          {/*          disabled={loading}*/}
+          {/*          onChange={(url) => field.onChange(url)}*/}
+          {/*          onRemove={() => field.onChange('')}*/}
+          {/*        />*/}
+          {/*      </FormControl>*/}
+          {/*      <FormMessage />*/}
+          {/*    </FormItem>*/}
+          {/*  )}*/}
+          {/*/>*/}
           <div className="md:grid md:grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -194,7 +193,7 @@ export const ModelForm: React.FC<ModelFormProps> = ({
                     </FormControl>
                     <SelectContent>
                       {status.map((item) => (
-                        <SelectItem key={item.id} value={item.value}>
+                        <SelectItem key={item.value} value={item.value}>
                           {item.label}
                         </SelectItem>
                       ))}

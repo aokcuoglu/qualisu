@@ -3,7 +3,7 @@ import prismadb from '@/lib/prisma'
 import { ControlForm } from './components/control-form'
 
 const GroupPage = async ({ params }: { params: { controlId: string } }) => {
-  const control = await prismadb.control.findUnique({
+  const control = await prismadb.controlPoints.findUnique({
     where: {
       id: params.controlId
     },

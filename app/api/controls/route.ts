@@ -1,31 +1,48 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs'
+import { currentUser } from '@clerk/nextjs'
 
 import prisma from '@/lib/prisma'
 
 export async function POST(req: Request) {
   try {
-    const { userId } = auth()
-    const body = await req.json()
-    const { name, status, groups } = body
+    const user = await currentUser()
 
-    if (!userId) {
+    const body = await req.json()
+    const { shortCode, controlPointsId, status } = body
+
+    if (!user) {
       return new NextResponse('Unauthenticated', { status: 403 })
+    } else {
     }
 
-    const control = await prisma.control.create({
+    const control = await prisma.controls.create({
       data: {
-        name,
+        shortCode,
+        username: user.username,
+        controlPointsId,
         status,
-        groups: {
-          connect: groups.map((group: string) => ({ id: group }))
-        }
+        vehicleShortCode: shortCode.slice(0, 2)
       }
     })
 
     return NextResponse.json(control)
   } catch (error) {
-    console.log('[CONTROLS_POST]', error)
+    console.log('[CONTROL_POST]', error)
+    return new NextResponse('Internal error', { status: 500 })
+  }
+}
+
+export async function GET() {
+  try {
+    const controls = await prisma.controls.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+
+    return NextResponse.json(controls)
+  } catch (error) {
+    console.log('[CONTROLS_GET]', error)
     return new NextResponse('Internal error', { status: 500 })
   }
 }

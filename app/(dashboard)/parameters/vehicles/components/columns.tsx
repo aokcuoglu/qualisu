@@ -16,8 +16,6 @@ export type VehicleColumn = {
   modelName: string
   shortVin: string
   status: string
-  createdAt: string
-  updatedAt: string
 }
 
 export const columns: ColumnDef<VehicleColumn>[] = [
@@ -66,7 +64,5 @@ export const columns: ColumnDef<VehicleColumn>[] = [
       )
     }
   },
-  // { accessorKey: 'createdAt', header: 'Created Date' },
-  // { accessorKey: 'updatedAt', header: 'Updated Date' },
   { id: 'actions', cell: ({ row }) => <CellAction data={row.original} /> }
 ]

@@ -33,20 +33,20 @@ export const columns: ColumnDef<ModelColumn>[] = [
       <DataTableColumnHeader column={column} title="Group" />
     )
   },
-  {
-    accessorKey: 'image',
-    header: 'Image',
-    cell: ({ row }) => (
-      <div className="relative w-8 h-8">
-        <Image
-          src={row.original.image}
-          alt=""
-          fill
-          className="border-2 border-white object-cover rounded-full"
-        />
-      </div>
-    )
-  },
+  // {
+  //   accessorKey: 'image',
+  //   header: 'Image',
+  //   cell: ({ row }) => (
+  //     <div className="relative w-8 h-8">
+  //       <Image
+  //         src={row.original.image}
+  //         alt=""
+  //         fill
+  //         className="border-2 border-white object-cover rounded-full"
+  //       />
+  //     </div>
+  //   )
+  // },
   {
     accessorKey: 'status',
     header: ({ column }) => (

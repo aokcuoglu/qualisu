@@ -1,8 +1,9 @@
 'use client'
 
+import * as React from 'react'
 import axios from 'axios'
-import { Copy, Edit, MoreHorizontal, Trash } from 'lucide-react'
-import { useParams, useRouter } from 'next/navigation'
+import { Edit, MoreHorizontal, Trash } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'react-hot-toast'
 
@@ -24,13 +25,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
   const router = useRouter()
-  const params = useParams()
 
   const onConfirm = async () => {
     try {
       setLoading(true)
       await axios.delete(`/api/controls/${data.id}`)
-      toast.success('Sub Model deleted.')
+      toast.success('Vehicle deleted.')
       router.refresh()
     } catch (error) {
       toast.error('Something went wrong')
@@ -57,9 +57,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => router.push(`/parameters/controls/${data.id}`)}
-          >
+          <DropdownMenuItem onClick={() => router.push(`/controls/${data.id}`)}>
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>

@@ -11,18 +11,18 @@ datasource db {
 }
 
 model Group {
-  id        String    @id @default(uuid())
+  id        String          @id @default(uuid())
   name      String
   models    Model[]
-  controls  Control[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  controls  ControlPoints[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
 }
 
 model Model {
   id        String    @id @default(uuid())
-  name      String
-  image     String
+  name      String    @unique
+  image     String?
   status    String
   vehicles  Vehicle[]
   group     Group     @relation(fields: [groupId], references: [id])
@@ -32,24 +32,16 @@ model Model {
 }
 
 model Vehicle {
-  id        String   @id @default(uuid())
+  id        String     @id @default(uuid())
   name      String
-  shortCode String   @unique
-  shortVin  String
+  shortCode String     @unique
+  shortVin  String     @unique
   status    String
-  model     Model    @relation(fields: [modelId], references: [id])
+  model     Model      @relation(fields: [modelId], references: [id])
   modelId   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Control {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  status    String
-  groups    Group[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  controls  Controls[]
 }
 
 model PartTeam {
@@ -89,4 +81,56 @@ model Customer {
   id     String @id @default(uuid())
   name   String
   region String
+}
+
+// Kontrol Noktalari; S1, S2 gibi..
+model ControlPoints {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  status    String
+  groups    Group[]
+  controls  Controls[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+// Kontroller, aracin bir noktadaki
+model Controls {
+  id               String           @id @default(uuid())
+  shortCode        String
+  status           String
+  username         String
+  records          ControlRecords[]
+  controlPoints    ControlPoints    @relation(fields: [controlPointsId], references: [id])
+  controlPointsId  String
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  vehicle          Vehicle          @relation(fields: [vehicleShortCode], references: [shortCode])
+  vehicleShortCode String
+}
+
+// Kontrol detaylari, satir satir
+model ControlRecords {
+  id            String   @id @default(uuid())
+  title         String
+  description   String
+  faultGrade    String
+  faultLocation String
+  missed        Boolean
+  images        Image[]
+  controls      Controls @relation(fields: [controlsId], references: [id])
+  controlsId    String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Image {
+  id               String         @id @default(uuid())
+  url              String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  controlRecords   ControlRecords @relation(fields: [controlRecordsId], references: [id])
+  controlRecordsId String
+
+  @@index([controlRecordsId])
 }

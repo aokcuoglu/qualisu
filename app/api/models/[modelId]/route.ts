@@ -60,7 +60,7 @@ export async function PATCH(
   try {
     const { userId } = auth()
     const body = await req.json()
-    const { name, status, image, groupId } = body
+    const { name, status, groupId } = body
 
     if (!userId) {
       return new NextResponse('Unauthenticated', { status: 403 })
@@ -74,10 +74,6 @@ export async function PATCH(
       return new NextResponse('Model status is required', { status: 400 })
     }
 
-    if (!image) {
-      return new NextResponse('Model image is required', { status: 400 })
-    }
-
     if (!groupId) {
       return new NextResponse('Vehicle type id is required', { status: 400 })
     }
@@ -89,7 +85,7 @@ export async function PATCH(
       data: {
         name,
         status,
-        image,
+        // image,
         groupId
       }
     })

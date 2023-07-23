@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { Trash } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
-import { Control, Group } from '@prisma/client'
+import { ControlPoints, Group } from '@prisma/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { AlertModal } from '@/components/modals/alert-modal'
@@ -47,7 +47,7 @@ const formSchema = z.object({
 type ControlFormValues = z.infer<typeof formSchema>
 
 interface ControlFormProps {
-  initialData: (Control & { groups: Group[] }) | null
+  initialData: (ControlPoints & { groups: Group[] }) | null
   groups: Group[]
 }
 
@@ -82,12 +82,12 @@ export const ControlForm: React.FC<ControlFormProps> = ({
     try {
       setLoading(true)
       if (initialData) {
-        await axios.patch(`/api/controls/${params.controlId}`, data)
+        await axios.patch(`/api/control-points/${params.controlId}`, data)
       } else {
-        await axios.post(`/api/controls/`, data)
+        await axios.post(`/api/control-points/`, data)
       }
       router.refresh()
-      router.push(`/parameters/controls`)
+      router.push(`/parameters/control-points`)
       toast.success(toastMessage)
     } catch (error: any) {
       toast.error('Something went wrong.')
@@ -99,9 +99,9 @@ export const ControlForm: React.FC<ControlFormProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true)
-      await axios.delete(`/api/controls/${params.controlId}`)
+      await axios.delete(`/api/control-points/${params.controlId}`)
       router.refresh()
-      router.push(`/parameters/controls`)
+      router.push(`/parameters/control-points`)
       toast.success('Control deleted.')
     } catch (error: any) {
       toast.error('Something went wrong.')
@@ -173,7 +173,7 @@ export const ControlForm: React.FC<ControlFormProps> = ({
                         return (
                           <FormItem
                             key={item.id}
-                            className="flex flex-row items-start space-x-3 space-y-0"
+                            className="flex flex-row space-y-0 space-x-2"
                           >
                             <FormControl>
                               <Checkbox
@@ -223,7 +223,7 @@ export const ControlForm: React.FC<ControlFormProps> = ({
                     </FormControl>
                     <SelectContent>
                       {status.map((item) => (
-                        <SelectItem key={item.id} value={item.value}>
+                        <SelectItem key={item.value} value={item.value}>
                           {item.label}
                         </SelectItem>
                       ))}

@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
-import { CalendarIcon, Check, ChevronsUpDown, Trash } from 'lucide-react'
+import { Trash } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { Model, Vehicle, Group } from '@prisma/client'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -247,7 +247,7 @@ export const SubModelForm: React.FC<SubModelFormProps> = ({
                     </FormControl>
                     <SelectContent>
                       {status.map((item) => (
-                        <SelectItem key={item.id} value={item.value}>
+                        <SelectItem key={item.value} value={item.value}>
                           {item.label}
                         </SelectItem>
                       ))}

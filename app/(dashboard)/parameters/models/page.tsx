@@ -8,7 +8,7 @@ import { ModelColumn } from './components/columns'
 const ModelPage = async () => {
   const models = await prismadb.model.findMany({
     orderBy: {
-      createdAt: 'desc'
+      name: 'asc'
     },
     include: {
       group: true

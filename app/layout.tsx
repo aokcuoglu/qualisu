@@ -4,13 +4,14 @@ import { Metadata } from 'next'
 
 import { ClerkProvider } from '@clerk/nextjs'
 
-import { fontSans } from '@/lib/fonts'
-import { cn } from '@/lib/utils'
-
 import { ToastProvider } from '@/app/providers/toast-provider'
 import { ThemeProvider } from '@/app/providers/theme.provider'
 
 import { Navbar } from '@/components/navbar'
+import { Inter } from 'next/font/google'
+import { TailwindIndicator } from '@/components/tailwind-indicator'
+
+const font = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Qualisu',
@@ -27,18 +28,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <head />
-        <body
-          className={cn(
-            'bg-background font-sans antialiased',
-            fontSans.variable
-          )}
-        >
+        <body className={font.className}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <ToastProvider />
             <div className="relative flex flex-col">
               <Navbar />
-              <div className="flex-1 p-4">{children}</div>
+              <div className="flex-1">{children}</div>
             </div>
+            <TailwindIndicator />
           </ThemeProvider>
         </body>
       </html>

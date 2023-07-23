@@ -26,6 +26,16 @@ export function MainNav({
       href: `/parameters/groups`,
       label: 'Parameters',
       active: pathname === `/parameters/groups}`
+    },
+    {
+      href: `/reports`,
+      label: 'Reports',
+      active: pathname === `/parameters/reports}`
+    },
+    {
+      href: `/controls`,
+      label: 'Controls',
+      active: pathname === `/parameters/controls}`
     }
   ]
 

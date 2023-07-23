@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { Trash } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
-import { PartTeam } from '@prisma/client'
+import { ControlPoints, Controls, Vehicle } from '@prisma/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { AlertModal } from '@/components/modals/alert-modal'
@@ -33,51 +33,56 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { status } from '@/lib/data'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 const formSchema = z.object({
-  code: z.string().min(3).max(3),
-  name: z.string().min(1),
-  status: z.string().min(1)
+  shortCode: z.string().min(1),
+  status: z.string().min(1),
+  controlPointsId: z.string().min(1)
 })
 
-type FailureFormValues = z.infer<typeof formSchema>
+type ControlFormValues = z.infer<typeof formSchema>
 
-interface FailureFormProps {
-  initialData: PartTeam | null
+interface ControlFormProps {
+  initialData: Controls | null
+  cPoints: ControlPoints[]
 }
 
-export const ControlForm: React.FC<FailureFormProps> = ({ initialData }) => {
+export const ControlForm: React.FC<ControlFormProps> = ({
+  initialData,
+  cPoints
+}) => {
   const params = useParams()
   const router = useRouter()
 
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const title = initialData ? 'Edit Part Team' : 'Create Part Team'
-  const description = initialData ? 'Edit a part team.' : 'Add a new part team'
-  const toastMessage = initialData ? 'Part team updated.' : 'Part team created.'
+  const title = initialData ? 'Edit control' : 'Create control'
+  const description = initialData ? 'Edit a control.' : 'Add a new control'
+  const toastMessage = initialData ? 'Control updated.' : 'Control created.'
   const action = initialData ? 'Save changes' : 'Create'
 
-  const defaultValues = initialData
-    ? initialData
-    : { name: '', code: '', status: '' }
-
-  const form = useForm<FailureFormValues>({
+  const form = useForm<ControlFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues
+    defaultValues: initialData || {
+      shortCode: '',
+      status: 'continue',
+      controlPointsId: ''
+    }
   })
 
-  const onSubmit = async (data: FailureFormValues) => {
+  const onSubmit = async (data: ControlFormValues) => {
     try {
       setLoading(true)
+      console.log(data)
       if (initialData) {
-        await axios.patch(`/api/part-teams/${params.ptId}`, data)
+        await axios.patch(`/api/controls/${params.controlId}`, data)
       } else {
-        await axios.post(`/api/part-teams/`, data)
+        await axios.post(`/api/controls/`, data)
       }
       router.refresh()
-      router.push(`/parameters/part-teams`)
+      router.push(`/controls`)
       toast.success(toastMessage)
     } catch (error: any) {
       toast.error('Something went wrong.')
@@ -89,10 +94,10 @@ export const ControlForm: React.FC<FailureFormProps> = ({ initialData }) => {
   const onDelete = async () => {
     try {
       setLoading(true)
-      await axios.delete(`/api/part-teams/${params.ptId}`)
+      await axios.delete(`/api/controls/${params.controlId}`)
       router.refresh()
-      router.push(`/parameters/failures`)
-      toast.success('Part team deleted.')
+      router.push(`/controls`)
+      toast.success('Control deleted.')
     } catch (error: any) {
       toast.error('Something went wrong.')
     } finally {
@@ -128,17 +133,17 @@ export const ControlForm: React.FC<FailureFormProps> = ({ initialData }) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
-          <div className="md:grid md:grid-cols-3 gap-8">
+          <div className="md:grid md:grid-rows-2 gap-8 w-1/4">
             <FormField
               control={form.control}
-              name="code"
+              name="shortCode"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Code</FormLabel>
+                  <FormLabel>Short Code</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="e.g. 100, 200"
+                      placeholder="e.g. 2N, N2 "
                       {...field}
                     />
                   </FormControl>
@@ -148,27 +153,10 @@ export const ControlForm: React.FC<FailureFormProps> = ({ initialData }) => {
             />
             <FormField
               control={form.control}
-              name="name"
+              name="controlPointsId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="e.g. Govde, Yurur Aksam"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel>Control Point</FormLabel>
                   <Select
                     disabled={loading}
                     onValueChange={field.onChange}
@@ -179,18 +167,21 @@ export const ControlForm: React.FC<FailureFormProps> = ({ initialData }) => {
                       <SelectTrigger>
                         <SelectValue
                           defaultValue={field.value}
-                          placeholder="Select a status"
+                          placeholder="Select a control point"
                         />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {status.map((item) => (
-                        <SelectItem key={item.value} value={item.value}>
-                          {item.label}
-                        </SelectItem>
-                      ))}
+                      <ScrollArea className="h-fit w-full">
+                        {cPoints.map((cPoint) => (
+                          <SelectItem key={cPoint.id} value={cPoint.id}>
+                            {cPoint.name}
+                          </SelectItem>
+                        ))}
+                      </ScrollArea>
                     </SelectContent>
                   </Select>
+
                   <FormMessage />
                 </FormItem>
               )}

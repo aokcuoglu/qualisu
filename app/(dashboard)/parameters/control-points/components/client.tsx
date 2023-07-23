@@ -22,7 +22,7 @@ export const ControlClient: React.FC<ControlClientProps> = ({ data }) => {
     <>
       <div className="flex items-center justify-between space-y-2">
         <Heading title="Control Points" description="Manage control points." />
-        <Button onClick={() => router.push('/parameters/controls/new')}>
+        <Button onClick={() => router.push('/parameters/control-points/new')}>
           <Plus className="mr-2 h-4 w-4" /> Add New
         </Button>
       </div>

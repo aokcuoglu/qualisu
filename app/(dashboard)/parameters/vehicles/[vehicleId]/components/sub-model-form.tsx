@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { Trash } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
-import { Model, Vehicle, Group } from '@prisma/client'
+import { Model, Vehicle } from '@prisma/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { AlertModal } from '@/components/modals/alert-modal'
@@ -20,7 +20,6 @@ import { Separator } from '@/components/ui/separator'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
